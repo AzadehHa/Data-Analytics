@@ -1,0 +1,54 @@
+import seaborn as sns
+
+iris = sns.load_dataset('iris')
+
+print(iris.head())
+
+sampled_data = iris.sample(n=30, random_state=53)
+
+print(sampled_data)
+
+import numpy as np
+
+mean_sepal_lengths = []
+for _ in range(100):
+    sampled_data = iris.sample(n=30, random_state=np.random.randint(0, 10000))
+    mean_sepal_lengths.append(sampled_data['sepal_length'].mean())
+    
+print(mean_sepal_lengths[:10])
+
+import matplotlib.pyplot as plt
+
+plt.hist(mean_sepal_lengths, bins=10, color='purple', edgecolor='gray', alpha=0.7)
+plt.title('Distribution of 100 Sample Means')
+plt.xlabel('Mean Sepal Length')
+plt.ylabel('Frequency')
+plt.show()
+
+import pandas as pd
+
+def systematic_sample(data, sampling_fraction):
+sample_size = int(len(data) * sampling_fraction)
+    step = len(data) // sample_size
+    indices = np.arange(0, len(data), step)[:sample_size]
+    return data.iloc[indices]
+sampled_data = systematic_sample(iris, sampling_fraction=0.2)
+plt.figure(figsize=(12, 6))
+# Original dataset
+plt.subplot(1, 2, 1)
+plt.scatter(iris['sepal_length'], iris['sepal_width'], alpha=0.5, label="Original Data")
+plt.title("Original Dataset")
+plt.xlabel("Sepal Length")
+plt.ylabel("Sepal Width")
+plt.legend()
+
+# Sampled dataset
+plt.subplot(1, 2, 2)
+plt.scatter(sampled_data['sepal_length'], sampled_data['sepal_width'], alpha=0.7, color="orange", label="Sampled Data")
+plt.title("Systematic Sample")
+plt.xlabel("Sepal Length")
+plt.ylabel("Sepal Width")
+plt.legend()
+
+plt.tight_layout()
+plt.show()
