@@ -1,0 +1,36 @@
+from google.colab import files
+uploded=files.upload()
+import pandas as pd
+data = pd.read_csv('GlobalWeatherRepository.csv')
+print(data.head())
+
+import numpy as np
+mean = data['temperature_celsius'].mean()
+median = data['temperature_celsius'].median()
+mode = data['temperature_celsius'].mode()
+variance= data['temperature_celsius'].var()
+std_dev= data['temperature_celsius'].std()
+range= data['temperature_celsius'].max() - data['temperature_celsius'].min()
+
+
+print(f"Mean: {mean}")
+print(f"Median: {median}")
+print(f"Mode: {mode}")
+print(f"Variance: {variance}")
+print(f"Standard Diviation: {std_dev}")
+print(f"Range: {range}")
+
+#summary_stats = data.describe()
+#print(summary_stats)
+
+import matplotlib.pyplot as plt
+plt.hist(data['temperature_celsius'], bins=10, color='blue', alpha=0.7)
+plt.title('Histogram of Temperature_Celsius')
+plt.xlabel('Temperature_Celsius')
+plt.ylabel('Frequency')
+plt.show()
+
+plt.boxplot(data['temperature_celsius'])
+plt.title('Box Plot of Temperature_Celsius')
+plt.ylabel('Temperature_Celsius')
+plt.show()
