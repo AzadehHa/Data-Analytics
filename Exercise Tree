@@ -1,0 +1,80 @@
+#T-test
+# Tip: for independent t-tests we need ttest_ind librarie and ttest_rel librarie for paired t-tests
+from scipy.stats import ttest_ind
+from sklearn.datasets import load_iris
+import pandas as pd
+
+iris = load_iris()
+iris_data = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+iris_data['species'] = pd.Categorical.from_codes(iris.target, iris.target_names)
+
+setosa_petal_length = iris_data[iris_data['species'] == 'setosa']['petal length (cm)']
+versicolor_petal_length = iris_data[iris_data['species'] == 'versicolor']['petal length (cm)']
+
+t_stat, p_value = ttest_ind(setosa_petal_length, versicolor_petal_length)
+
+print(f"T-statistic: {t_stat}")
+print(f"P-value: {p_value}")
+---------------------------------------------------------------------------
+#Z-test
+from statsmodels.stats.weightstats import ztest
+from sklearn.datasets import load_iris
+import pandas as pd
+
+iris = load_iris()
+iris_data = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+iris_data['species'] = pd.Categorical.from_codes(iris.target, iris.target_names)
+
+setosa_sepal_length = iris_data[iris_data['species'] == 'setosa']['sepal length (cm)']
+
+hypothesized_mean = 5.0
+
+z_stat, p_value_z = ztest(setosa_sepal_length, value=hypothesized_mean)
+
+print(f"Z-statistic: {z_stat}")
+print(f"P-value: {p_value_z}")
+
+#Explanation: Because the p-value (0.904) is much larger than conventional level  (e g, 0.05),  we cannot reject the Null Hypothesis, 
+  so there is no statistically significant evidence to conclude that the mean sepal length of Setosa is different from 5.0.
+----------------------------------------------------------------------------
+#ANOVA
+import pandas as pd
+from sklearn.datasets import load_iris
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+
+iris = load_iris()
+iris_data = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+iris_data['species'] = pd.Categorical.from_codes(iris.target, iris.target_names)
+
+# Tip: 1. petal width as the dependent variable and species as the independent variable
+#      2. one-way ANOVA using statsmodels
+model = ols('Q("petal width (cm)") ~ species', data=iris_data).fit()
+anova_results = sm.stats.anova_lm(model, typ=2)
+
+print(anova_results)
+----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
