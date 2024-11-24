@@ -54,8 +54,37 @@ anova_results = sm.stats.anova_lm(model, typ=2)
 
 print(anova_results)
 ----------------------------------------------------------------------------
+import pandas as pd
+from sklearn.datasets import load_iris
+import statsmodels.api as sm
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+iris = load_iris()
+iris_data = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+
+correlation = iris_data['sepal length (cm)'].corr(iris_data['petal length (cm)'])
+
+print(f"Correlation between Sepal Length and Petal Length: {correlation}")
 
 
+X = iris_data['sepal length (cm)']  
+Y = iris_data['petal length (cm)']  
+
+X_with_const = sm.add_constant(X)
+model = sm.OLS(Y, X_with_const).fit()
+
+print(model.summary())
+
+sns.scatterplot(x='sepal length (cm)', y='petal length (cm)', data=iris_data, color='blue', label='Data')
+plt.plot(X, model.predict(X_with_const), color='red', label='Regression Line')
+plt.legend()
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Petal Length (cm)')
+plt.title('Relationship between Sepal Length and Petal Length')
+plt.show()
+
+#Explanation: Due to the definition and types of Correlation Analysis, we can explain that in this example Pearson Correlation is Coefficient.
 
 
 
