@@ -65,4 +65,6 @@ plt.show()
 # This histogram of  100 sample means visually reinforces this idea. It shows a normal distribution, indicating that most of 
 # the sample means are close to the  population mean. The dispersion (or variance) of the sample means is also apparent, 
 # demonstrating the natural variability that comes with random sampling.
-
+# Additionally, a systematic sample was viewed alongside the original data set to compare the appearance of the two data sets 
+# in terms of the relationship between sepal length and  sepal width. The scatter plot shows that while the original data set 
+# appears more random, the systematic sample has a more regular structure, reflecting the uniform nature of the sampling method.
