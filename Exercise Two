@@ -34,7 +34,7 @@ sample_size = int(len(data) * sampling_fraction)
     return data.iloc[indices]
 sampled_data = systematic_sample(iris, sampling_fraction=0.2)
 plt.figure(figsize=(12, 6))
-# Original dataset
+
 plt.subplot(1, 2, 1)
 plt.scatter(iris['sepal_length'], iris['sepal_width'], alpha=0.5, label="Original Data")
 plt.title("Original Dataset")
@@ -42,7 +42,6 @@ plt.xlabel("Sepal Length")
 plt.ylabel("Sepal Width")
 plt.legend()
 
-# Sampled dataset
 plt.subplot(1, 2, 2)
 plt.scatter(sampled_data['sepal_length'], sampled_data['sepal_width'], alpha=0.7, color="orange", label="Sampled Data")
 plt.title("Systematic Sample")
@@ -52,3 +51,18 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+
+#Explanation: From this full dataset and three species: Setosa, Versicolor, and Virginica, we drew a random sample of 30 data points.
+# This sample provided a snapshot of the dataset—just a small subset of observations. By printing the sample, 
+# we confirmed the variability in the data, showing that each randomly selected data point could belong to 
+# any species and have a wide range of sepal lengths and widths.
+# After that, we decided to investigate the variability of the mean sepal length across multiple samples. We repeated 
+# the sampling process 100 times, each time drawing a random sample of 30 data points and calculating the mean sepal length for 
+# that sample. This gave us a sampling distribution of the mean. The results were striking: the means of the 100 samples clustered 
+# around a central value, reflecting the true mean of the population. This is a perfect example of the Central Limit Theorem in
+# action—no matter how the data is distributed, the distribution of sample means will tend to be normal (or bell-shaped) as 
+# we take more and more samples.
+# This histogram of  100 sample means visually reinforces this idea. It shows a normal distribution, indicating that most of 
+# the sample means are close to the  population mean. The dispersion (or variance) of the sample means is also apparent, 
+# demonstrating the natural variability that comes with random sampling.
+
