@@ -1,5 +1,8 @@
 #T-test
-# Tip: for independent t-tests we need ttest_ind librarie and ttest_rel librarie for paired t-tests
+# Tip: 1.for independent t-tests we need ttest_ind librarie and ttest_rel librarie for paired t-tests
+#      2.Setosa: A species in the Iris dataset known for its shorter petal lengths.
+#        Versicolor: A species with moderately longer petal lengths compared to Setosa.
+
 from scipy.stats import ttest_ind
 from sklearn.datasets import load_iris
 import pandas as pd
@@ -13,6 +16,8 @@ versicolor_petal_length = iris_data[iris_data['species'] == 'versicolor']['petal
 
 t_stat, p_value = ttest_ind(setosa_petal_length, versicolor_petal_length)
 
+print(f"Mean Petal Length of Setosa: {setosa_petal_length}")
+print(f"Mean Petal Length of Versicolor: {versicolor_petal_length}")
 print(f"T-statistic: {t_stat}")
 print(f"P-value: {p_value}")
 ---------------------------------------------------------------------------
@@ -54,6 +59,7 @@ anova_results = sm.stats.anova_lm(model, typ=2)
 
 print(anova_results)
 ----------------------------------------------------------------------------
+#Correlation/Regression
 import pandas as pd
 from sklearn.datasets import load_iris
 import statsmodels.api as sm
