@@ -40,3 +40,5 @@ plt.title('Line Chart of Temperature_Celsius')
 plt.xlabel('temperature_celsius')
 plt.ylabel('Frequency')
 plt.show()
+
+Explanation: We can visualize from plots that how temperature_celsius change over time or indices. 
