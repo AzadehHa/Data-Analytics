@@ -21,6 +21,19 @@ print(f"Mean Petal Length of Versicolor: {versicolor_petal_length}")
 print(f"T-statistic: {t_stat}")
 print(f"P-value: {p_value}")
 
+plt.figure(figsize=(10, 6))
+
+sns.histplot(setosa_petal_length, color='skyblue', kde=True, label='Setosa', bins=15, alpha=0.6)
+sns.histplot(versicolor_petal_length, color='lightgreen', kde=True, label='Versicolor', bins=15, alpha=0.6)
+
+plt.title("Petal Length Distribution: Setosa vs. Versicolor", fontsize=14)
+plt.xlabel("Petal Length (cm)", fontsize=12)
+plt.ylabel("Frequency", fontsize=12)
+plt.legend(title="Species")
+plt.grid(True)
+
+plt.show()
+
 #Explanation: The mean petal length of Setosa flowers is about 1.46 cm, while that of Versicolor flowers is
 # about 4.26 cm. There is clearly a significant difference between the two species in  petal length.
 # The t-statistic is -15.74, a highly significant negative value. This indicates that the means of the two groups are 
