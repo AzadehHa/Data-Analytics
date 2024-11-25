@@ -77,6 +77,11 @@ plt.ylabel('Frequency')
 plt.legend(title='Species')
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
+
+#Explanation: At first we can find that there is a significant difference in the mean petal width among the three Iris species 
+# and the variation between species is much larger than the variation within each species. In addition, the Histogram shows that 
+# Setosa flowers have smaller petal widths compared to Versicolor and Virginica, which have larger petal widths.
+
 ----------------------------------------------------------------------------
 #Correlation/Regression
 import pandas as pd
