@@ -82,8 +82,8 @@ model = sm.OLS(Y, X_with_const).fit()
 
 print(model.summary())
 
-sns.scatterplot(x='sepal length (cm)', y='petal length (cm)', data=iris_data, color='blue', label='Data')
-plt.plot(X, model.predict(X_with_const), color='red', label='Regression Line')
+sns.scatterplot(x='sepal length (cm)', y='petal length (cm)', data=iris_data, color='green', label='Data')
+plt.plot(X, model.predict(X_with_const), color='yellow', label='Regression Line')
 plt.legend()
 plt.xlabel('Sepal Length (cm)')
 plt.ylabel('Petal Length (cm)')
