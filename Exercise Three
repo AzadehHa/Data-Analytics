@@ -58,6 +58,17 @@ model = ols('Q("petal width (cm)") ~ species', data=iris_data).fit()
 anova_results = sm.stats.anova_lm(model, typ=2)
 
 print(anova_results)
+
+print(anova_results)
+
+plt.figure(figsize=(8, 6))
+sns.boxplot(x='species', y='petal width (cm)', data=iris_data, palette='muted')
+
+plt.title('Comparison of Petal Widths Across Species')
+plt.xlabel('Species')
+plt.ylabel('Petal Width (cm)')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
 ----------------------------------------------------------------------------
 #Correlation/Regression
 import pandas as pd
