@@ -22,7 +22,6 @@ print(f"T-statistic: {t_stat}")
 print(f"P-value: {p_value}")
 
 plt.figure(figsize=(10, 6))
-
 sns.histplot(setosa_petal_length, color='skyblue', kde=True, label='Setosa', bins=15, alpha=0.6)
 sns.histplot(versicolor_petal_length, color='lightgreen', kde=True, label='Versicolor', bins=15, alpha=0.6)
 
@@ -60,6 +59,18 @@ z_stat, p_value_z = ztest(setosa_sepal_length, value=hypothesized_mean)
 
 print(f"Z-statistic: {z_stat}")
 print(f"P-value: {p_value_z}")
+
+plt.figure(figsize=(10, 6))
+sns.histplot(setosa_sepal_length, bins=15, kde=True, color='skyblue', alpha=0.6)
+plt.axvline(x=hypothesized_mean, color='red', linestyle='--', label=f'Hypothesized Mean ({hypothesized_mean} cm)')
+
+plt.title("Distribution of Setosa Sepal Lengths with Hypothesized Mean", fontsize=14)
+plt.xlabel("Sepal Length (cm)", fontsize=12)
+plt.ylabel("Frequency", fontsize=12)
+plt.legend(title="Legend")
+plt.grid(True)
+
+plt.show()
 
 #Explanation: Because the p-value (0.904) is much larger than conventional level  (e g, 0.05),  we cannot reject the Null Hypothesis, 
   so there is no statistically significant evidence to conclude that the mean sepal length of Setosa is different from 5.0.
@@ -120,6 +131,7 @@ model = sm.OLS(Y, X_with_const).fit()
 print(model.summary())
 
 sns.scatterplot(x='sepal length (cm)', y='petal length (cm)', data=iris_data, color='green', label='Data')
+
 plt.plot(X, model.predict(X_with_const), color='yellow', label='Regression Line')
 plt.legend()
 plt.xlabel('Sepal Length (cm)')
