@@ -20,6 +20,15 @@ print(f"Mean Petal Length of Setosa: {setosa_petal_length}")
 print(f"Mean Petal Length of Versicolor: {versicolor_petal_length}")
 print(f"T-statistic: {t_stat}")
 print(f"P-value: {p_value}")
+
+#Explanation: The mean petal length of Setosa flowers is about 1.46 cm, while that of Versicolor flowers is
+# about 4.26 cm. There is clearly a significant difference between the two species in  petal length.
+# The t-statistic is -15.74, a highly significant negative value. This indicates that the means of the two groups are 
+# significantly different, with Setosa having a much smaller petal length than Versicolor.
+# The p-value is very small, which is much lower than the typical significance level of 0.05. This means that the 
+# difference in petal length is statistically significant and we can reject the null hypothesis that there is no difference 
+# between the two species.
+
 ---------------------------------------------------------------------------
 #Z-test
 from statsmodels.stats.weightstats import ztest
