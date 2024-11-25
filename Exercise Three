@@ -59,14 +59,13 @@ anova_results = sm.stats.anova_lm(model, typ=2)
 
 print(anova_results)
 
-print(anova_results)
+plt.figure(figsize=(10, 6))
+sns.histplot(data=iris_data,x='petal width (cm)',hue='species',kde=True,palette='muted',bins=15,alpha=0.6)
 
-plt.figure(figsize=(8, 6))
-sns.boxplot(x='species', y='petal width (cm)', data=iris_data, palette='muted')
-
-plt.title('Comparison of Petal Widths Across Species')
-plt.xlabel('Species')
-plt.ylabel('Petal Width (cm)')
+plt.title('Histogram of Petal Widths by Species')
+plt.xlabel('Petal Width (cm)')
+plt.ylabel('Frequency')
+plt.legend(title='Species')
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
 ----------------------------------------------------------------------------
