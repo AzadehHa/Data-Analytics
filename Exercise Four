@@ -1,0 +1,89 @@
+from google.colab import files
+uploded=files.upload()
+import pandas as pd
+data = pd.read_csv('application_record.csv')
+print(data.head())
+
+print(data.isnull().sum())
+
+import pandas as pd
+
+
+data = pd.read_csv('application_record.csv')  
+
+# Check for missing values
+print("Missing values before imputation:")
+print(data.isnull().sum())
+
+# Handling missing values
+# Numerical columns: Impute with mean or median
+numerical_columns = ['ID', 'CNT_CHILDREN', 'AMT_INCOME_TOTAL', 'DAYS_BIRTH', 'DAYS_EMPLOYED', 'FLAG_MOBIL', 'FLAG_WORK_PHONE', 'FLAG_PHONE', 'FLAG_EMAIL', 'CNT_FAM_MEMBERS']
+for col in numerical_columns:
+    data[col] = data[col].fillna(data[col].median())  # Use median for numerical columns
+
+# Categorical columns: Impute with mode
+categorical_columns = ['CODE_GENDER', 'FLAG_OWN_CAR', 'FLAG_OWN_REALTY', 'NAME_INCOME_TYPE', 'NAME_EDUCATION_TYPE', 'NAME_FAMILY_STATUS', 'NAME_HOUSING_TYPE', 'OCCUPATION_TYPE']
+for col in categorical_columns:
+    data[col] = data[col].fillna(data[col].mode()[0])  # Use mode for categorical columns
+
+# Check for missing values after imputation
+print("\nMissing values after imputation:")
+print(data.isnull().sum())
+
+# Save the cleaned dataset
+data.to_csv('application_record_cleaned.csv', index=False)
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+
+data = pd.read_csv('application_record.csv') 
+
+
+# Plot histograms for understanding about the nooise
+numerical_columns = ['ID', 'CNT_CHILDREN', 'AMT_INCOME_TOTAL', 'DAYS_BIRTH', 'DAYS_EMPLOYED', 'FLAG_MOBIL', 'FLAG_WORK_PHONE', 'FLAG_PHONE', 'FLAG_EMAIL', 'CNT_FAM_MEMBERS']
+for col in numerical_columns:
+    plt.figure(figsize=(6, 4))
+    sns.histplot(data[col], kde=True, bins=30, color='blue')
+    plt.title(f'Distribution of {col}')
+    plt.xlabel(col)
+    plt.ylabel('Frequency')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.show()
+
+from scipy.stats import zscore
+
+from google.colab import files
+uploded=files.upload()
+import pandas as pd
+data = pd.read_csv('application_record.csv')
+
+# Compute Z-scores for the 'AMT_INCOME_TOTAL' column
+data['Z_Score_AMT_INCOME_TOTAL'] = zscore(data['AMT_INCOME_TOTAL'])
+
+# Identify outliers based on Z-score threshold (e.g., |Z| > 3)
+outliers = data[(data['Z_Score_AMT_INCOME_TOTAL'] > 3) | (data['Z_Score_AMT_INCOME_TOTAL'] < -3)]
+
+print("Outliers detected in 'AMT_INCOME_TOTAL':")
+print(outliers)
+
+from google.colab import files
+uploded=files.upload()
+import pandas as pd
+import numpy as np
+data = pd.read_csv('application_record.csv')
+
+# Apply log transformation to 'AMT_INCOME_TOTAL'
+data['Transformed_AMT_INCOME_TOTAL'] = np.log1p(data['AMT_INCOME_TOTAL'])  # log1p avoids log(0)
+
+# Plot the transformed data to verify changes
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(6, 4))
+sns.histplot(data['Transformed_AMT_INCOME_TOTAL'], kde=True, bins=30, color='blue')
+plt.title('Distribution of Log-Transformed AMT_INCOME_TOTAL')
+plt.xlabel('Log(AMT_INCOME_TOTAL)')
+plt.ylabel('Frequency')
+plt.show()
