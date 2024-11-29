@@ -87,3 +87,70 @@ plt.title('Distribution of Log-Transformed AMT_INCOME_TOTAL')
 plt.xlabel('Log(AMT_INCOME_TOTAL)')
 plt.ylabel('Frequency')
 plt.show()
+
+
+import pandas as pd
+import numpy as np
+from sklearn.feature_selection import mutual_info_regression # Changed to mutual_info_regression
+import seaborn as sns
+import matplotlib.pyplot as plt
+from google.colab import files
+uploded=files.upload()
+data = pd.read_csv('application_record.csv')
+
+# Separate features and target
+X = data.drop(columns=['AMT_INCOME_TOTAL']) 
+y = data['AMT_INCOME_TOTAL']                
+
+# Separate numerical and categorical features
+numerical_features = X.select_dtypes(include=['float64', 'int64']).columns
+categorical_features = X.select_dtypes(include=['object', 'category']).columns
+
+# Compute correlations between numerical features and target
+correlations = data[numerical_features].corrwith(y)
+
+# Display the correlations
+correlation_df = correlations.sort_values(ascending=False).reset_index()
+correlation_df.columns = ['Feature', 'Correlation with AMT_INCOME_TOTAL']
+print(correlation_df)
+
+# Compute correlation matrix
+correlation_matrix = data[numerical_features].corr()
+
+# Plot heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=True)
+plt.title('Correlation Matrix')
+plt.show()
+
+selected_features_correlation = correlation_df[correlation_df['Correlation with AMT_INCOME_TOTAL'].abs() > 0.2]['Feature']
+print("Selected features based on correlation:", selected_features_correlation.tolist())
+
+# Compute mutual information scores
+# Changed to mutual_info_regression for continuous target
+mi_scores = mutual_info_regression(X[numerical_features], y, random_state=42) 
+
+# Create a DataFrame for visualization
+mi_df = pd.DataFrame({'Feature': numerical_features, 'Mutual Information': mi_scores})
+mi_df = mi_df.sort_values(by='Mutual Information', ascending=False)
+print(mi_df)
+
+# Bar plot of mutual information scores
+plt.figure(figsize=(10, 6))
+sns.barplot(x='Mutual Information', y='Feature', data=mi_df, palette='viridis')
+plt.title('Mutual Information Scores')
+plt.show()
+
+# Set thresholds
+correlation_threshold = 0.1
+mi_threshold = 0.005
+
+# Select features from correlation
+correlation_features = correlation_df[correlation_df['Correlation with AMT_INCOME_TOTAL'].abs() > correlation_threshold]['Feature']
+
+# Select features from mutual information
+mutual_information_features = mi_df[mi_df['Mutual Information'] > mi_threshold]['Feature']
+
+# Combine the two
+final_selected_features = set(correlation_features).intersection(set(mutual_information_features))
+print("Final Selected Features:", final_selected_features)
