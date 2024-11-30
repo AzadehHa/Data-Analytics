@@ -69,7 +69,6 @@ print("Outliers detected in 'AMT_INCOME_TOTAL':")
 print(outliers)
 
 from google.colab import files
-uploded=files.upload()
 import pandas as pd
 import numpy as np
 data = pd.read_csv('application_record.csv')
@@ -154,7 +153,7 @@ mutual_information_features = mi_df[mi_df['Mutual Information'] > mi_threshold][
 # Combine the two
 final_selected_features = set(correlation_features).intersection(set(mutual_information_features))
 print("Final Selected Features:", final_selected_features)
-
+-------------------------------------------------------
 import pandas as pd
 import numpy as np
 from sklearn.feature_selection import RFE
@@ -167,8 +166,8 @@ import matplotlib.pyplot as plt
 uploded=files.upload()
 data = pd.read_csv('application_record.csv')
 
-# Assuming 'TARGET' is your target variable
-X = data.drop(columns=['AMT_INCOME_TOTAL'])  # Replace 'TARGET' with the actual target column
+# Assuming your target variable
+X = data.drop(columns=['AMT_INCOME_TOTAL'])  
 y = data['AMT_INCOME_TOTAL']
 
 # Convert categorical features to numerical using Label Encoding
@@ -245,4 +244,64 @@ plt.plot(results_df['n_features'], results_df['test_accuracy'], marker='o')
 plt.xlabel('Number of Features Selected')
 plt.ylabel('Test Accuracy')
 plt.title('Feature Selection Performance')
+plt.show()
+----------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import Lasso
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+import matplotlib.pyplot as plt
+
+# Load the dataset
+data = pd.read_csv('application_record.csv')
+
+# Drop missing values in the target column
+data = data.dropna(subset=['AMT_INCOME_TOTAL'])
+
+# Define features (X) and target (y)
+X = data.drop(columns=['AMT_INCOME_TOTAL'])
+y = data['AMT_INCOME_TOTAL']
+
+# Encode categorical features
+categorical_features = X.select_dtypes(include=['object']).columns
+for feature in categorical_features:
+    le = LabelEncoder()
+    X[feature] = le.fit_transform(X[feature])
+
+# Standardize numerical features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Split the dataset
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# Apply Lasso Regression
+alpha_value = 0.02  
+lasso = Lasso(alpha=alpha_value, random_state=42)
+lasso.fit(X_train, y_train)
+
+# Extract non-zero coefficients (selected features)
+selected_features = np.array(X.columns)[lasso.coef_ != 0]
+dropped_features = np.array(X.columns)[lasso.coef_ == 0]
+
+print(f"Selected Features ({len(selected_features)}):", selected_features)
+print(f"Dropped Features ({len(dropped_features)}):", dropped_features)
+
+# Feature importance (absolute coefficient values)
+lasso_importances = pd.DataFrame({
+    'Feature': X.columns,
+    'Coefficient': lasso.coef_
+}).sort_values(by='Coefficient', key=abs, ascending=False)
+
+print("\nFeature Importance from Lasso Regression:")
+print(lasso_importances)
+
+# Plot Lasso Coefficients
+plt.figure(figsize=(10, 6))
+plt.barh(lasso_importances['Feature'], lasso_importances['Coefficient'], color='lightgreen')
+plt.xlabel('Coefficient Value')
+plt.ylabel('Features')
+plt.title('Feature Importance from Lasso Regression')
+plt.gca().invert_yaxis()
 plt.show()
