@@ -155,3 +155,94 @@ mutual_information_features = mi_df[mi_df['Mutual Information'] > mi_threshold][
 final_selected_features = set(correlation_features).intersection(set(mutual_information_features))
 print("Final Selected Features:", final_selected_features)
 
+import pandas as pd
+import numpy as np
+from sklearn.feature_selection import RFE
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from google.colab import files
+from sklearn.preprocessing import LabelEncoder 
+import matplotlib.pyplot as plt
+
+uploded=files.upload()
+data = pd.read_csv('application_record.csv')
+
+# Assuming 'TARGET' is your target variable
+X = data.drop(columns=['AMT_INCOME_TOTAL'])  # Replace 'TARGET' with the actual target column
+y = data['AMT_INCOME_TOTAL']
+
+# Convert categorical features to numerical using Label Encoding
+categorical_features = X.select_dtypes(include=['object']).columns # Select object type columns
+for feature in categorical_features:
+    le = LabelEncoder()
+    X[feature] = le.fit_transform(X[feature]) # Encode categorical features
+
+# Split the dataset for training and testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+# Define the model
+model = RandomForestRegressor(random_state=42)
+
+# Define RFE with the desired number of features to select
+n_features_to_select = 3  # Choose how many features you want to keep
+rfe = RFE(estimator=model, n_features_to_select=n_features_to_select)
+
+# Fit RFE to the training data
+rfe.fit(X_train, y_train)
+
+# Get the rankings of features
+feature_ranking = pd.DataFrame({
+    'Feature': X_train.columns,
+    'Ranking': rfe.ranking_
+}).sort_values(by='Ranking')
+
+# Display selected features
+selected_features = feature_ranking[feature_ranking['Ranking'] == 1]['Feature']
+print("Selected Features:")
+print(selected_features)
+
+
+# Plot feature rankings
+plt.figure(figsize=(10, 6))
+plt.barh(feature_ranking['Feature'], feature_ranking['Ranking'], color='skyblue')
+plt.xlabel('Ranking (1 = Selected)')
+plt.ylabel('Features')
+plt.title('Feature Rankings by RFE')
+plt.gca().invert_yaxis()  # Invert y-axis for better readability
+plt.show()
+
+# Use only selected features
+X_train_selected = X_train[selected_features]
+X_test_selected = X_test[selected_features]
+
+# Train a model using selected features
+model_selected = RandomForestRegressor(random_state=42)
+model_selected.fit(X_train_selected, y_train)
+
+# Evaluate performance
+print("Model Performance with Selected Features:")
+print("Training Accuracy:", model_selected.score(X_train_selected, y_train))
+print("Testing Accuracy:", model_selected.score(X_test_selected, y_test))
+
+from sklearn.metrics import accuracy_score
+
+# Test different numbers of features
+results = []
+for n_features in range(1, X_train.shape[1] + 1):
+    rfe = RFE(estimator=model, n_features_to_select=n_features)
+    rfe.fit(X_train, y_train)
+    selected_features = X_train.columns[rfe.support_]
+    model_selected = RandomForestRegressor(random_state=42)
+    model_selected.fit(X_train[selected_features], y_train)
+    test_accuracy = model_selected.score(X_test[selected_features], y_test)
+    results.append((n_features, test_accuracy))
+
+# Plot results
+results_df = pd.DataFrame(results, columns=['n_features', 'test_accuracy'])
+plt.figure(figsize=(10, 6))
+plt.plot(results_df['n_features'], results_df['test_accuracy'], marker='o')
+plt.xlabel('Number of Features Selected')
+plt.ylabel('Test Accuracy')
+plt.title('Feature Selection Performance')
+plt.show()
