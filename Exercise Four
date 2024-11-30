@@ -184,7 +184,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model = RandomForestRegressor(random_state=42)
 
 # Define RFE with the desired number of features to select
-n_features_to_select = 3  # Choose how many features you want to keep
+n_features_to_select = 5  # Choose how many features you want to keep
 rfe = RFE(estimator=model, n_features_to_select=n_features_to_select)
 
 # Fit RFE to the training data
