@@ -128,4 +128,76 @@ Therefore, Random Forest is the best-performing model in its current configurati
 
 ------------------------------------------------------------------------------------------------------------------------
 
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
+# Load the dataset
+data = pd.read_csv('application_record.csv')
+
+# Drop rows with missing target values
+data = data.dropna(subset=['NAME_INCOME_TYPE'])
+
+# Define target (y) and features (X)
+X = data.drop(columns=['NAME_INCOME_TYPE'])
+y = data['NAME_INCOME_TYPE']
+
+# Create a LabelEncoder specifically for the target variable
+target_encoder = LabelEncoder()  # Create a separate encoder for the target
+y = target_encoder.fit_transform(y)
+
+# Encode categorical features
+categorical_features = X.select_dtypes(include=['object']).columns
+for feature in categorical_features:
+    le = LabelEncoder()
+    X[feature] = le.fit_transform(X[feature])
+
+# Standardize numerical features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Split the dataset
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# Initialize KNN model with n_neighbors=3
+knn_model = KNeighborsClassifier(n_neighbors=3)
+knn_model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = knn_model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.4f}")
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred, target_names=target_encoder.classes_))
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=target_encoder.classes_, yticklabels=target_encoder.classes_)
+plt.title('Confusion Matrix for KNN (n_neighbors=3)')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.show()
+
+Accuracy: 0.9224
+
+Classification Report:
+                      precision    recall  f1-score   support
+
+Commercial associate       0.87      0.86      0.87     20236
+           Pensioner       1.00      1.00      1.00     15093
+       State servant       0.87      0.85      0.86      7141
+             Student       0.75      0.75      0.75         4
+             Working       0.93      0.93      0.93     45238
+
+            accuracy                           0.92     87712
+           macro avg       0.88      0.88      0.88     87712
+        weighted avg       0.92      0.92      0.92     87712
